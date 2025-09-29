@@ -1,12 +1,20 @@
+export interface Metric {
+  timestamp: string;
+  value: number;
+}
+
 export interface Vessel {
   id: string;
   name: string;
-  status: "Active" | "Idle" | "Maintenance";
-  latitude: number;
-  longitude: number;
-  updatedAt: string;
-  fuelHistory?: { timestamp: string; value: number }[];
-  dredgingSpeed?: number[];
-  dredgingDepth?: number[];
-  engineTempHistory?: { timestamp: string; value: number }[];
+  status: "Active" | "Inactive" | "Maintenance" | "Idle";
+  location: {
+    lat: number;
+    lng: number;
+  };
+  metrics: {
+    fuel: Metric[];
+    depth: Metric[];
+    temperature: Metric[];
+  };
+  lastUpdated: string;
 }

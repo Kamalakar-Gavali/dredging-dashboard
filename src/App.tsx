@@ -6,18 +6,9 @@ import Sidebar from "./components/Sidebar";
 import Overview from "./components/Overview";
 import FleetMap from "./components/FleetMap";
 import PerformanceMetrics from "./components/PerformanceMetrics";
+import type { Vessel } from "./types";
 
-type Vessel = {
-  id: string;
-  name: string;
-  status: "Active" | "Idle" | "Maintenance";
-  lastUpdated: string;
-  lat: number;
-  lng: number;
-  fuelHistory?: { timestamp: string; value: number }[];
-  depthSpeedHistory?: { depth: number; speed: number }[];
-  engineTempHistory?: { timestamp: string; value: number }[];
-};
+const API_URL = "https://682f2101746f8ca4a47ff775.mockapi.io/VesselData";
 
 const App: React.FC = () => {
   const [vessels, setVessels] = useState<Vessel[]>([]);
@@ -26,10 +17,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchVessels = async () => {
       try {
-        const res = await axios.get<Vessel[]>(
-          "https://682f2101746f8ca4a47ff775.mockapi.io/VesselData"
-        );
-        setVessels(res.data);
+        const res = await axios.get(API_URL);
+        // Extract vessels array from API response
+        setVessels(res.data[0]?.vessels || []);
       } catch (err) {
         console.error("Error fetching vessels:", err);
       } finally {
@@ -46,7 +36,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex h-screen w-screen bg-gray-100">
         <Sidebar />
         <main className="flex-1 p-6 overflow-y-auto">
           <Routes>
